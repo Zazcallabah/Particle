@@ -1,6 +1,6 @@
 var makeView = function(start, xdir, ydir, ping_callback )
 {
-  var default_position = new Vec();
+	var default_position = new Vec([0,0,-866000000]);
 	var default_u = new Vec([1,0,0]).unit();
 	var default_v = new Vec([0,1,0]).unit();
 	
