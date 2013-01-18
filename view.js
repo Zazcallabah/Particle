@@ -13,6 +13,7 @@ var makeView = function(start, xdir, ydir, ping_callback )
 	var hasmoved = false;
 	var actions = {};
 	var count = 0;
+	var auto = false;
 
 	var _rotate = function( ve, theta, around )
 	{
@@ -60,14 +61,28 @@ var makeView = function(start, xdir, ydir, ping_callback )
 				}
 			}
 		},
+		toggleAuto: function() { auto = ! auto; },
+		auto: function() {return auto;},
 		u: function() { return u; },
 		v: function() { return v; },
 		n: function() { return n; },
 		pos: function() { return pos; },
 		moveTo: function( newpos ) { pos = newpos; },
+		rotateTo: function( newu,newv ){
+			u = newu.unit();
+			v = newv.unit();
+			n = u.cross( v ); 
+		},
+		setN:function( newn ){
+			n = newn.unit();
+			u = v.cross(n);
+		},
 		reset: function(){ pos = default_position; u = default_u; v = default_v; n = u.cross( v ); },
 		addAction: function( key, action ){
 			actions[key] = action;
+		},
+		actAction: function( key ){
+			actions[key]();
 		},
 		draw: function( context, w,h,obj ) { // draw: draw obj on context which has width w, height h
 			var p = obj.pos().sub( this.pos() ); // p is vector pointing from viewport to object

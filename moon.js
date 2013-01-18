@@ -136,7 +136,8 @@ var setParticleControlActions = function( view, drawlist )
 	var energycounter = 0;
 	var selectenergy = function()
 	{
-		return energies[energycounter++ % energies.length];
+return energies[energycounter++ % energies.length];
+
 	};
 	
 	// boxed-in moon
@@ -166,7 +167,41 @@ var setParticleControlActions = function( view, drawlist )
 				}));
 			}
 	});
-	
+	// giant boxed-in moon
+	view.addAction( 70, // f
+	function(){
+	var energy= selectenergy();
+
+		var current = new Date().getTime();
+		if( current - frameTimeStamp < 1000 )
+			return;
+		frameTimeStamp = new Date().getTime();
+	for( var i = -200e6; i< 200e6; i+=34e6 )
+		for( var j = -200e6; j< 200e6; j+=35e6 )
+			for( var k = -200e6; k< 200e6; k+=36e6 )
+			{
+				var part_pos = moon.pos().mul(0.5).add(new Vec([i,j,k]));
+				drawlist.push( new Particle(
+					energy,
+					part_pos,
+					moon.pos().sub(part_pos).unit(),
+					function(p){
+					if(p.sub(moon.pos()).abs() < moon.r() )
+					{
+						return true;
+					}
+					return p.sub(earth.pos()).abs() < earth.r();
+				}));
+			}
+	});
+	view.addAction( 77, // m
+	function(){
+	var current = new Date().getTime();
+		if( current - frameTimeStamp < 1000 )
+			return;
+		frameTimeStamp = new Date().getTime();
+			view.toggleAuto();
+	});
 	view.addAction( 78, // n
 		function(){
 
@@ -286,8 +321,8 @@ var makeMoonSim = function()
 
 
 
-
 	setParticleControlActions( viewport, drawables );
+	viewport.actAction( 86 );
 	
 	var lastmark = -1;
 	
@@ -307,6 +342,17 @@ var makeMoonSim = function()
 		}
 		
 		drawables.sort( sortFunction ); // if we dont sort, stuff farther away may be drawn on top of closer stuff, it's a makeshift z-buffer
+		if( viewport.auto() )
+		{
+		var anim = mark % (10000*5);
+		var frac = anim/(10000*5);
+		var xamp = moon.pos().x() *.5;
+		var yamp = 0;
+		var zamp = xamp*0.8;
+		var angle = frac*Math.PI*2;
+		viewport.moveTo( moon.pos().add(new Vec([xamp*Math.sin(angle),0,zamp*Math.cos(angle)])) );
+		viewport.setN( moon.pos().sub(viewport.pos()) );
+		}
 
 		for( var d2 in drawables )
 		{
