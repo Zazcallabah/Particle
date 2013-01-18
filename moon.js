@@ -131,10 +131,18 @@ var setParticleControlActions = function( view, drawlist )
 		for( d in defaultobjects )
 			drawlist.push( defaultobjects[d]);
 	}); 
+	var energies = [1e6,1e7,1e8,1e9,1e10,1e11,1e12];
+	var MJ = 3844e5;
+	var energycounter = 0;
+	var selectenergy = function()
+	{
+		return energies[energycounter++ % energies.length];
+	};
 	
 	// boxed-in moon
 	view.addAction( 86, // v
 	function(){
+	var energy= selectenergy();
 
 		var current = new Date().getTime();
 		if( current - frameTimeStamp < 1000 )
@@ -146,7 +154,7 @@ var setParticleControlActions = function( view, drawlist )
 			{
 				var part_pos = moon.pos().mul(0.5).add(new Vec([i,j,k]));
 				drawlist.push( new Particle(
-					1e8,
+					energy,
 					part_pos,
 					moon.pos().sub(part_pos).unit(),
 					function(p){
@@ -159,13 +167,6 @@ var setParticleControlActions = function( view, drawlist )
 			}
 	});
 	
-	var energies = [1e6,1e7,1e8,1e9,1e10,1e11,1e12];
-	var MJ = 3844e5;
-	var energycounter = 0;
-	var selectenergy = function()
-	{
-		return energies[energycounter++ % energies.length];
-	};
 	view.addAction( 78, // n
 		function(){
 
