@@ -168,19 +168,18 @@ return energies[energycounter++ % energies.length];
 	};
 	
 	// boxed-in moon
-	view.addAction( 86, // v
-	function(){
+	var tmp = function( skip ){
 	var energy= selectenergy();
 
 		var current = new Date().getTime();
-		if( current - frameTimeStamp < 1000 )
+		if( skip === undefined && current - frameTimeStamp < 1000 )
 			return;
 		frameTimeStamp = new Date().getTime();
 	for( var i = -300e6; i< 131e6; i+=34e6 )
 		for( var j = -100e6; j< 101e6; j+=35e6 )
 			for( var k = -100e6; k< 101e6; k+=36e6 )
 			{
-				var part_pos = moon.pos().mul(0.5).add(new Vec([i,j,k]));
+				var part_pos = moon.pos().add(new Vec([i,j,k]));
 				drawlist.push( new Particle(
 					energy,
 					part_pos,
@@ -193,7 +192,11 @@ return energies[energycounter++ % energies.length];
 					return p.sub(earth.pos()).abs() < earth.r();
 				}));
 			}
-	});
+	};
+	view.addAction( 86, // v
+	tmp
+	);
+	tmp( true ); // initial fill
 	// giant boxed-in moon
 	view.addAction( 70, // f
 	function(){
@@ -362,7 +365,7 @@ var makeMoonSim = function()
 
 
 	setParticleControlActions( viewport, drawables );
-	viewport.actAction( 86 );
+
 	
 	var lastmark = -1;
 	
