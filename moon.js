@@ -11,6 +11,33 @@ var makeInterstellar = function( radius, position, color )
 	};
 };
 
+var getMagnitudeColor=function( m )
+{
+	if( m<0 )
+	return "f";
+	if( m<1 )
+	return "e";
+	if( m<2 )
+	return "d";
+	if( m<2.5 )
+	return "c";
+	if( m<2.75 )
+	return "b";
+	if( m<3 )
+	return "a";
+	if( m<3.3 )
+	return "9";
+	if( m<3.6 )
+	return "8";
+	if( m<3.9 )
+	return "7";
+	if( m<4.2 )
+	return "6";
+	if( m<4.5 )
+	return "5";
+	return "4";
+}
+
 var _t89c = makeT89C();
 var _RE = 6.378e6;
 var _c = 3e8;
@@ -318,6 +345,19 @@ var makeMoonSim = function()
 	drawables.push( makeInterstellar( 6e7, new Vec([sundist-1.513e12,0,0]), "gold" ) ); //saturn
 	drawables.push( makeInterstellar( 2.5e7, new Vec([sundist-3e12,0,0]), "cyan" ) ); //uranus
 	drawables.push( makeInterstellar( 2.4e7, new Vec([sundist-4.553e12,0,0]), "#aaf" ) ); //neptune
+	
+	for( var i = 0; i<_stars.length; i++ )
+	{
+		var m = getMagnitudeColor( _stars[i].Magnitude );
+		var r = 1e15;
+		var ra = _stars[i].RA;
+		var dec = (Math.PI/2) - _stars[i].Dec;
+		var x = r*Math.sin(dec)*Math.cos(ra);
+		var y = r*Math.sin(dec)*Math.sin(ra);
+		var z = r*Math.cos(dec);
+
+		drawables.push( makeInterstellar( 1e12, new Vec([x,y,z]), "#"+m+m+m ) );
+	}
 
 
 
