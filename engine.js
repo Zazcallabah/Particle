@@ -1,21 +1,20 @@
 function makeLog()
 {
-  var counter = 0;
+	var counter = 0;
 	var timestamp = new Date().getTime();
 	var fps = 0;
-	return function(context, width, height, mark, pressedkeys) {
-			counter++;
-
-			var took = new Date().getTime() - timestamp;
-
-			if( took > 1000 )
-			{
-				var load = took/counter;
-				fps = 1000/load;
-				counter =0;
-				timestamp=new Date().getTime();
-			}
-			
+	return function(context, width, height, mark, pressedkeys)
+	{
+		counter++;
+		var took = new Date().getTime() - timestamp;
+		if( took > 1000 )
+		{
+			var load = took/counter;
+			fps = 1000/load;
+			counter =0;
+			timestamp=new Date().getTime();
+		}
+		
 		context.fillStyle = "white";
 		context.font = "12px";
 		context.fillText( "FPS: " + Math.round(fps), 100, 40 );
@@ -26,7 +25,7 @@ function makeEngine( canvas )
 {
 	var workers = [];
 	var pressedkeys = [];
-	var triggerWork = function(context, width, height, mark )
+	var triggerWork = function( context, width, height, mark )
 	{
 		for (var worker in workers)
 		{

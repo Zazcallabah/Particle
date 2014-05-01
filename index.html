@@ -16,14 +16,14 @@
 		var _engine = undefined;
 		var _stars = JSON.parse(_stardata);
 		window.onload = function(){
-		_engine = makeEngine(document.getElementById("example"));
-		_engine.add( makeLog() );
-		_engine.add( makeMoonSim() );
-		_engine.start();
-	};
+			_engine = makeEngine(document.getElementById("example"));
+			_engine.add( makeLog() );
+			_engine.add( makeMoonSim() );
+			_engine.start();
+		};
 	</script>
 </head>
 <body style="height: 100%;padding:0;margin:0">
-<canvas id="example"></canvas>
+	<canvas id="example"></canvas>
 </body>
 </html>
