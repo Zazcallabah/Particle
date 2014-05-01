@@ -8,8 +8,6 @@ var makeView = function(start, xdir, ydir, ping_callback )
 	var u = xdir || default_u;
 	var v = ydir || default_v;
 	var n = u.cross( v );
-	var fovx = 1;
-	var fovy = 1;
 	var hasmoved = false;
 	var actions = {};
 	var count = 0;
@@ -87,15 +85,15 @@ var makeView = function(start, xdir, ydir, ping_callback )
 		draw: function( context, w,h,obj ) { // draw: draw obj on context which has width w, height h
 			var p = obj.pos().sub( this.pos() ); // p is vector pointing from viewport to object
 			var ndist = p.dot( this.n() ); // project p onto the viewport normal to get how far away object is along the axis
-			if( ndist > -1*fovx*w ) // if object should be drawn, (i.e. if distance is positive)
+			if( ndist > -1*w ) // if object should be drawn, (i.e. if distance is positive)
 			{
 				var x = p.dot( this.u()); // project p onto x and y viewport axises
 				var y = p.dot( this.v()); // these are the actual coordinates in the vector space of object as viewed from viewport
 				
 				//calculate the scaled down coordinates and size of object that represent the x and y coordinates of draw location. 
-				var cx = (x*fovx*w) / (ndist+fovx*w) + w/2;
-				var cy = (y*fovy*h) / (ndist+fovy*h) + h/2;
-				var obj_observed_size = obj.r()*fovx*w/(ndist+fovx*w);
+				var cx = (x*w) / (ndist+w) + w/2;
+				var cy = (y*w) / (ndist+w) + h/2;
+				var obj_observed_size = obj.r()*w/(ndist+w);
 
 				if( cx < w && cy < h && cx >= 0 && cy >= 0 )
 				{
@@ -126,7 +124,7 @@ var makeView = function(start, xdir, ydir, ping_callback )
 		
 		context.fillStyle = "white";
 		context.font = "12px";
-		context.fillText( this.pos().info(), 100, 20 );
+		context.fillText( this.pos().info(), 120, 20 );
 		
 		}
 	};

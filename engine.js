@@ -17,7 +17,12 @@ function makeLog()
 		
 		context.fillStyle = "white";
 		context.font = "12px";
-		context.fillText( "FPS: " + Math.round(fps), 100, 40 );
+		context.fillText( "FPS: " + Math.round(fps), 120, 40 );
+		
+		context.fillText( "WASD - Move, Shift for speed",120, 60 );
+		context.fillText( "IJKL - Rotate",120, 70 );
+		context.fillText( "XC - Reset",120, 80 );
+		context.fillText( "FVB - Particles",120, 90 );
 	};
 }
 
