@@ -348,11 +348,11 @@ var makeMoonSim = function()
 	drawables.push( makeInterstellar( 6e7, new Vec([sundist-1.513e12,0,0]), "gold" ) ); //saturn
 	drawables.push( makeInterstellar( 2.5e7, new Vec([sundist-3e12,0,0]), "cyan" ) ); //uranus
 	drawables.push( makeInterstellar( 2.4e7, new Vec([sundist-4.553e12,0,0]), "#aaf" ) ); //neptune
-	
+	/*
 	for( var i = 0; i<_stars.length; i++ )
 	{
 		var m = getMagnitudeColor( _stars[i].Magnitude );
-		var r = 1e15;
+		var r = _stars[i].Dist;
 		var ra = _stars[i].RA;
 		var dec = (Math.PI/2) - _stars[i].Dec;
 		var x = r*Math.sin(dec)*Math.cos(ra);
@@ -360,7 +360,7 @@ var makeMoonSim = function()
 		var z = r*Math.cos(dec);
 
 		drawables.push( makeInterstellar( 1e12, new Vec([x,y,z]), "#"+m+m+m ) );
-	}
+	}*/
 
 
 
@@ -379,7 +379,7 @@ var makeMoonSim = function()
 		if( lastmark < 0 )
 			lastmark =mark;
 		viewport.tick( keys );
-		for( var d in drawables )
+		for( var d = 0; d<drawables.length; d++ )
 		{
 			drawables[d].tick( (mark - lastmark)/10000 ); // magic number here, since mark is measured in seconds*10^-5
 		}
@@ -397,7 +397,7 @@ var makeMoonSim = function()
 		viewport.setN( moon.pos().sub(viewport.pos()) );
 		}
 
-		for( var d2 in drawables )
+		for( var d2 = 0; d2<drawables.length; d2++ )
 		{
 			viewport.draw( context, width,height, drawables[d2] );
 		}
@@ -405,3 +405,4 @@ var makeMoonSim = function()
 		lastmark = mark;
 	};
 };
+//delta mag = -2.171 * ln( distance ) + 4.9985

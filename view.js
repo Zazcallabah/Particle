@@ -82,10 +82,10 @@ var makeView = function(start, xdir, ydir, ping_callback )
 		actAction: function( key ){
 			actions[key]();
 		},
-		draw: function( context, w,h,obj ) { // draw: draw obj on context which has width w, height h
+		draw: function( context, w, h, obj, override_size ) { // draw: draw obj on context which has width w, height h
 			var p = obj.pos().sub( this.pos() ); // p is vector pointing from viewport to object
 			var ndist = p.dot( this.n() ); // project p onto the viewport normal to get how far away object is along the axis
-			if( ndist > -1*w ) // if object should be drawn, (i.e. if distance is positive)
+			if( ndist > w ) // if object should be drawn, (i.e. if distance is positive)
 			{
 				var x = p.dot( this.u()); // project p onto x and y viewport axises
 				var y = p.dot( this.v()); // these are the actual coordinates in the vector space of object as viewed from viewport
@@ -93,7 +93,8 @@ var makeView = function(start, xdir, ydir, ping_callback )
 				//calculate the scaled down coordinates and size of object that represent the x and y coordinates of draw location. 
 				var cx = (x*w) / (ndist+w) + w/2;
 				var cy = (y*w) / (ndist+w) + h/2;
-				var obj_observed_size = obj.r()*w/(ndist+w);
+				
+				var obj_observed_size = override_size || obj.r()*w/(ndist+w);
 
 				if( cx < w && cy < h && cx >= 0 && cy >= 0 )
 				{
