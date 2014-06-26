@@ -18,7 +18,6 @@ function makeLog()
 		context.fillStyle = "white";
 		context.font = "12px";
 		context.fillText( "FPS: " + Math.round(fps), 120, 40 );
-		
 		context.fillText( "WASD - Move, Shift for speed",120, 60 );
 		context.fillText( "IJKL - Rotate",120, 70 );
 		context.fillText( "XC - Reset",120, 80 );
@@ -26,36 +25,54 @@ function makeLog()
 	};
 }
 
-function makeEngine( canvas )
-{
-	var workers = [];
-	var pressedkeys = [];
-	var triggerWork = function( context, width, height, mark )
-	{
-		for (var worker in workers)
-		{
-			workers[worker](context, width, height, mark, pressedkeys);
-		}
-	};
+function getEventKey(event){
+	if(event == null)
+		return window.event.keyCode;
+	else
+		return event.keyCode;
+};
 
-	document.onkeyup = function(){ pressedkeys = []; }
+function makeKeyHandler()
+{
+	pressedkeys = [];
+	document.onkeyup = function(event) {
+		var keyCode = getEventKey(event);
+		for( var k =0;k< pressedkeys.length;k++ )
+		{
+			if( pressedkeys[k] === keyCode )
+			{
+				pressedkeys.splice(k,1);
+				return;
+			}
+		}
+	}
 
 	document.onkeydown = function(event) {
-		var keyCode;
-		if(event == null)
-		{
-			keyCode = window.event.keyCode;
-		}
-		else
-		{
-			keyCode = event.keyCode;
-		}
-		for( var k in pressedkeys )
+		var keyCode = getEventKey(event);
+		for( var k =0;k< pressedkeys.length;k++ )
 		{
 			if( pressedkeys[k] === keyCode )
 				return;
 		}
 		pressedkeys.push( keyCode );
+	};
+	
+	return {
+		pressedkeys: pressedkeys
+	};
+}
+
+
+function makeEngine( canvas )
+{
+	var workers = [];
+	var kh = makeKeyHandler();
+	var triggerWork = function( context, width, height, mark )
+	{
+		for (var worker =0; worker< workers.length; worker++)
+		{
+			workers[worker](context, width, height, mark, kh.pressedkeys);
+		}
 	};
 
 	var animate = function()
