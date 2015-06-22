@@ -11,33 +11,6 @@ var makeInterstellar = function( radius, position, color )
 	};
 };
 
-var getMagnitudeColor=function( m )
-{
-	if( m<0 )
-	return "f";
-	if( m<1 )
-	return "e";
-	if( m<2 )
-	return "d";
-	if( m<2.5 )
-	return "c";
-	if( m<2.75 )
-	return "b";
-	if( m<3 )
-	return "a";
-	if( m<3.3 )
-	return "9";
-	if( m<3.6 )
-	return "8";
-	if( m<3.9 )
-	return "7";
-	if( m<4.2 )
-	return "6";
-	if( m<4.5 )
-	return "5";
-	return "4";
-}
-
 var _t89c = makeT89C();
 var _RE = 6.378e6;
 var _c = 3e8;
@@ -168,18 +141,19 @@ return energies[energycounter++ % energies.length];
 	};
 	
 	// boxed-in moon
-	var tmp = function( skip ){
+	view.addAction( 86, // v
+	function(){
 	var energy= selectenergy();
 
 		var current = new Date().getTime();
-		if( skip === undefined && current - frameTimeStamp < 1000 )
+		if( current - frameTimeStamp < 1000 )
 			return;
 		frameTimeStamp = new Date().getTime();
 	for( var i = -300e6; i< 131e6; i+=34e6 )
 		for( var j = -100e6; j< 101e6; j+=35e6 )
 			for( var k = -100e6; k< 101e6; k+=36e6 )
 			{
-				var part_pos = moon.pos().add(new Vec([i,j,k]));
+				var part_pos = moon.pos().mul(0.5).add(new Vec([i,j,k]));
 				drawlist.push( new Particle(
 					energy,
 					part_pos,
@@ -192,11 +166,7 @@ return energies[energycounter++ % energies.length];
 					return p.sub(earth.pos()).abs() < earth.r();
 				}));
 			}
-	};
-	view.addAction( 86, // v
-	tmp
-	);
-	tmp( true ); // initial fill
+	});
 	// giant boxed-in moon
 	view.addAction( 70, // f
 	function(){
@@ -348,24 +318,11 @@ var makeMoonSim = function()
 	drawables.push( makeInterstellar( 6e7, new Vec([sundist-1.513e12,0,0]), "gold" ) ); //saturn
 	drawables.push( makeInterstellar( 2.5e7, new Vec([sundist-3e12,0,0]), "cyan" ) ); //uranus
 	drawables.push( makeInterstellar( 2.4e7, new Vec([sundist-4.553e12,0,0]), "#aaf" ) ); //neptune
-	/*
-	for( var i = 0; i<_stars.length; i++ )
-	{
-		var m = getMagnitudeColor( _stars[i].Magnitude );
-		var r = _stars[i].Dist;
-		var ra = _stars[i].RA;
-		var dec = (Math.PI/2) - _stars[i].Dec;
-		var x = r*Math.sin(dec)*Math.cos(ra);
-		var y = r*Math.sin(dec)*Math.sin(ra);
-		var z = r*Math.cos(dec);
-
-		drawables.push( makeInterstellar( 1e12, new Vec([x,y,z]), "#"+m+m+m ) );
-	}*/
 
 
 
 	setParticleControlActions( viewport, drawables );
-
+	viewport.actAction( 86 );
 	
 	var lastmark = -1;
 	
@@ -379,7 +336,7 @@ var makeMoonSim = function()
 		if( lastmark < 0 )
 			lastmark =mark;
 		viewport.tick( keys );
-		for( var d = 0; d<drawables.length; d++ )
+		for( var d in drawables )
 		{
 			drawables[d].tick( (mark - lastmark)/10000 ); // magic number here, since mark is measured in seconds*10^-5
 		}
@@ -397,7 +354,7 @@ var makeMoonSim = function()
 		viewport.setN( moon.pos().sub(viewport.pos()) );
 		}
 
-		for( var d2 = 0; d2<drawables.length; d2++ )
+		for( var d2 in drawables )
 		{
 			viewport.draw( context, width,height, drawables[d2] );
 		}
@@ -405,4 +362,3 @@ var makeMoonSim = function()
 		lastmark = mark;
 	};
 };
-//delta mag = -2.171 * ln( distance ) + 4.9985
