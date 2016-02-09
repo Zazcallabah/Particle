@@ -5,6 +5,8 @@ This is a javascript demo that renders particles in the magnetic field between t
 
 The simulation part is a port of Emelie Holm's thesis on the movement of particles in the magnetosphere. It uses Tsyganenko's External Field Model to calculate the movements of particles.
 
+[![Video demo](scr_par.png)](https://www.youtube.com/watch?v=O8xrTBCFcMQ "Video demo")
+
 
 Instructions
 ------------
